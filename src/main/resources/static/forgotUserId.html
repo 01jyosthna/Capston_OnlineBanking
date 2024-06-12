@@ -50,6 +50,14 @@
         .buttons button:hover {
             background-color: #87CEEB;
         }
+         .buttons .proceed-button {
+            background-color: #32CD32; /* Green color */
+            border-color: #000000; /* Match border color */
+        }
+        .buttons .back-button {
+            background-color: #D3D3D3; /* Black color */
+            border-color: #000000; /* Match border color */
+        }
         #response {
             text-align: center;
             margin-top: 20px;
@@ -110,8 +118,8 @@
             <input type="text" id="otp" name="otp" required>
         </div>
         <div class="buttons">
-            <button type="submit">Proceed</button>
-            <button type="button" onclick="goBack()">Back</button>
+            <button type="submit" class="proceed-button">Proceed</button>
+            <button type="button" class="back-button" onclick="goBack()">Back</button>
         </div>
     </form>
     <p id="response"></p>
