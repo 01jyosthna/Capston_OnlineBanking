@@ -21,8 +21,10 @@ import java.util.Map;
 @Slf4j
 public class UserController {
     private static final Logger log = LoggerFactory.getLogger( UserController.class);
+
     @Autowired
     private UserService userService;
+
 
     @PostMapping("/registerUsers")
     public Flux<BankingUser> registerUser(@RequestBody List<BankingUser> bankingUserList){

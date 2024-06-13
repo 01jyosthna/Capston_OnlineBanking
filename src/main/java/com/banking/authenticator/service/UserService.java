@@ -17,11 +17,10 @@ import java.util.List;
 @Service
 @Slf4j
 public class UserService {
+
     private static final Logger log = LoggerFactory.getLogger( UserService.class);
     @Autowired
     private UserRepository userRepository;
-
-
 
     public Mono<String> forgotUserId(String accountNumber, String otp) {
         // Verify OTP and retrieve User ID
