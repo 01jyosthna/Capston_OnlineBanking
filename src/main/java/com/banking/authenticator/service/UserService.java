@@ -37,19 +37,7 @@ public class UserService {
                 });
     }
 
-    /*public Mono<String> forgotPassword(String userId, String otp) {
-        // Verify OTP and allow password reset
-        return userRepository.findByUserId(userId)
-                .flatMap(bankingUser -> {
-                    if (bankingUser.getOtp().equals(otp)) {
-                        log.info("OTP verified. Please set a new password.");
-                        return Mono.just("OTP verified. Please set a new password.");
-                    } else {
-                        log.info("Invalid OTP. Please try again.");
-                        return Mono.just("Invalid OTP. Please try again.");
-                    }
-                });
-    }*/
+
     public Mono<Map<String, Object>> forgotPassword(String userId, String otp) {
         // Verify OTP and allow password reset
         return userRepository.findByUserId(userId)
@@ -80,16 +68,19 @@ public class UserService {
                 .switchIfEmpty(Mono.just("User not found"));
     }
 
-    public Mono<String> setNewPassword(String userId, String newPassword) {
-        // Set a new password
-        return userRepository.findByUserId(userId)
-                .flatMap(bankingUser -> {
-                    bankingUser.setPassword(newPassword);
-                    log.info("Changing Password for UserId - {}", userId);
-                    return userRepository.save(bankingUser)
-                            .then(Mono.just("Password changed successfully."));
-                });
-    }
+
+  public Mono<Map<String, String>> setNewPassword(String userId, String newPassword) {
+      return userRepository.findByUserId(userId)
+              .flatMap(bankingUser -> {
+                  bankingUser.setPassword(newPassword); // Assuming a setPassword method exists
+                  return userRepository.save(bankingUser).then(Mono.just("Password changed successfully"));
+              })
+              .map(message -> {
+                  Map<String, String> response = new HashMap<>();
+                  response.put("message", message);
+                  return response;
+              });
+  }
 
     public Flux<BankingUser> registerUser(List<BankingUser> bankingUserList) {
         return userRepository.saveAll(bankingUserList);
