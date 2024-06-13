@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -38,17 +38,17 @@
             text-decoration: underline;
         }
     </style>
-</head>
-<body>
-<div class="container">
-    <h1>Account Locked</h1>
-    <p>Your account has been temporarily locked due to too many failed login attempts.</p>
-    <p>Please click <a href="#" onclick="redirectToSetNewPassword()">here</a> to reset your password.</p>
-</div>
-<script th:inline="javascript">
-    function redirectToSetNewPassword() {
-        window.location.href = /*[[@{/setNewPassword.html}]]*/ '/setNewPassword.html';
-    }
-</script>
-</body>
+    <script >
+        function redirectToSetNewPassword() {
+            window.location.href = setNewPassword.html;
+        }
+    </script>
+    </head>
+    <body>
+    <div class="container">
+        <h1>Account Locked</h1>
+        <p>Your account has been temporarily locked due to too many failed login attempts.</p>
+        <p>Please click <a href="setNewPassword.html" onclick="redirectToSetNewPassword()">here</a> to reset your password.</p>
+    </div>
+    </body>
 </html>
