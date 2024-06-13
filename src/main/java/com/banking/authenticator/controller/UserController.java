@@ -46,7 +46,7 @@ public class UserController {
                 }});
     }
 
-    @PostMapping(value = "/forgotPassword", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    /*@PostMapping(value = "/forgotPassword", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Mono<Map<String, String>> forgotPassword(@RequestBody Map<String, String> payload) {
         String userId = payload.get("userId");
         String otp = payload.get("otp");
@@ -59,6 +59,18 @@ public class UserController {
                 })
                 .defaultIfEmpty(new HashMap<String, String>() {{
                     put("message", "No response from server");
+                }});
+    }*/
+
+    @PostMapping(value = "/forgotPassword", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Mono<Map<String, Object>> forgotPassword(@RequestBody Map<String, String> payload) {
+        String userId = payload.get("userId");
+        String otp = payload.get("otp");
+        log.info("forgotPassword api invoked with userId: {}, otp: {}", userId, otp);
+        return userService.forgotPassword(userId, otp)
+                .defaultIfEmpty(new HashMap<String, Object>() {{
+                    put("message", "No response from server");
+                    put("valid", false);
                 }});
     }
 

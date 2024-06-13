@@ -13,6 +13,7 @@ import reactor.test.StepVerifier;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -63,27 +64,7 @@ public class UserServiceTest {
                 .verifyComplete();
     }
 
-    @Test
-    void testForgotPassword_ValidOTP() {
-        when(userRepository.findByUserId(bankingUser.getUserId())).thenReturn(Mono.just(bankingUser));
 
-        Mono<String> result = userService.forgotPassword(bankingUser.getUserId(), bankingUser.getOtp());
-
-        StepVerifier.create(result)
-                .expectNext("OTP verified. Please set a new password.")
-                .verifyComplete();
-    }
-
-    @Test
-    void testForgotPassword_InvalidOTP() {
-        when(userRepository.findByUserId(bankingUser.getUserId())).thenReturn(Mono.just(bankingUser));
-
-        Mono<String> result = userService.forgotPassword(bankingUser.getUserId(), "wrongOTP");
-
-        StepVerifier.create(result)
-                .expectNext("Invalid OTP. Please try again.")
-                .verifyComplete();
-    }
 
     @Test
     void testAccountLocked_UserFound() {
@@ -96,7 +77,33 @@ public class UserServiceTest {
                 .expectNext("Account locked. Please reset your password.")
                 .verifyComplete();
     }
+    @Test
+    void testForgotPassword_ValidOTP() {
+        when(userRepository.findByUserId(bankingUser.getUserId())).thenReturn(Mono.just(bankingUser));
 
+        Mono<Map<String, Object>> result = userService.forgotPassword(bankingUser.getUserId(), bankingUser.getOtp());
+
+        StepVerifier.create(result)
+                .expectNextMatches(response ->
+                        "OTP verified. Please set a new password.".equals(response.get("message")) &&
+                                Boolean.TRUE.equals(response.get("valid"))
+                )
+                .verifyComplete();
+    }
+
+    @Test
+    void testForgotPassword_InvalidOTP() {
+        when(userRepository.findByUserId(bankingUser.getUserId())).thenReturn(Mono.just(bankingUser));
+
+        Mono<Map<String, Object>> result = userService.forgotPassword(bankingUser.getUserId(), "wrongOTP");
+
+        StepVerifier.create(result)
+                .expectNextMatches(response ->
+                        "Invalid OTP. Please try again.".equals(response.get("message")) &&
+                                Boolean.FALSE.equals(response.get("valid"))
+                )
+                .verifyComplete();
+    }
     @Test
     void testAccountLocked_UserNotFound() {
         when(userRepository.findByUserId("nonExistentUser")).thenReturn(Mono.empty());

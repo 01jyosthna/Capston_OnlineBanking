@@ -11,7 +11,8 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import java.util.Map;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -36,7 +37,7 @@ public class UserService {
                 });
     }
 
-    public Mono<String> forgotPassword(String userId, String otp) {
+    /*public Mono<String> forgotPassword(String userId, String otp) {
         // Verify OTP and allow password reset
         return userRepository.findByUserId(userId)
                 .flatMap(bankingUser -> {
@@ -48,8 +49,24 @@ public class UserService {
                         return Mono.just("Invalid OTP. Please try again.");
                     }
                 });
+    }*/
+    public Mono<Map<String, Object>> forgotPassword(String userId, String otp) {
+        // Verify OTP and allow password reset
+        return userRepository.findByUserId(userId)
+                .flatMap(bankingUser -> {
+                    Map<String, Object> response = new HashMap<>();
+                    if (bankingUser.getOtp().equals(otp)) {
+                        log.info("OTP verified. Please set a new password.");
+                        response.put("message", "OTP verified. Please set a new password.");
+                        response.put("valid", true);
+                    } else {
+                        log.info("Invalid OTP. Please try again.");
+                        response.put("message", "Invalid OTP. Please try again.");
+                        response.put("valid", false);
+                    }
+                    return Mono.just(response);
+                });
     }
-
     public Mono<String> accountLocked(String userId) {
 
         // Handle account locking
