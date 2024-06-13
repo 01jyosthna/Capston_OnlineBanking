@@ -14,6 +14,8 @@ import reactor.test.StepVerifier;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Map;
+import java.util.HashMap;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -121,10 +123,10 @@ public class UserServiceTest {
         when(userRepository.findByUserId(bankingUser.getUserId())).thenReturn(Mono.just(bankingUser));
         when(userRepository.save(any(BankingUser.class))).thenReturn(Mono.just(bankingUser));
 
-        Mono<String> result = userService.setNewPassword(bankingUser.getUserId(), newPassword);
+        Mono<Map<String, String>> result = userService.setNewPassword(bankingUser.getUserId(), newPassword);
 
         StepVerifier.create(result)
-                .expectNext("Password changed successfully.")
+                .expectNextMatches(response -> response.get("message").equals("Password changed successfully"))
                 .verifyComplete();
     }
 
