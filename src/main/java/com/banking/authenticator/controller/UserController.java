@@ -25,7 +25,6 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-
     @PostMapping("/registerUsers")
     public Flux<BankingUser> registerUser(@RequestBody List<BankingUser> bankingUserList){
         return  userService.registerUser(bankingUserList);
